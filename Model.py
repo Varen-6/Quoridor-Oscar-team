@@ -68,6 +68,8 @@ class Board:
     def move_player(self, player, moveto):
         if moveto in (self.get_valid_moves(player.pos)):
             player.pos = moveto
+        else:
+            return False
 
     def get_valid_moves(self, coord):
         valid_moves = []
@@ -133,7 +135,6 @@ class Board:
             supposed_walls = list(self.walls)
             supposed_walls.extend([top(coord), coord, bottom(coord)])
             if_clear = self.players_have_paths(supposed_walls, player1_finish, player2_finish)
-        print(if_clear)
         if True not in if_clear[0] or True not in if_clear[1]:
             return True
         else:
@@ -193,6 +194,8 @@ class Board:
         if self.can_place_wall_here(wall.center, wall.orientation):
             self.walls.extend(wall.all_coords)
             player.walls_number -= 1
+        else:
+            return False
 
     def get_board_grid(self):
         grid = [['T' for x in range(self.board_size)] for c in range(self.board_size)]
