@@ -57,7 +57,7 @@ class Board:
         if orientation == 'H':
             if left(coord) in self.walls or right(coord) in self.walls or self.will_block_path(coord, orientation):
                 return False
-        if orientation == 'W':
+        if orientation == 'V':
             if top(coord) in self.walls or bottom(coord) in self.walls or self.will_block_path(coord, orientation):
                 return False
         return True
