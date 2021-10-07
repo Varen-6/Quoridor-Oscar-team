@@ -57,7 +57,7 @@ class Board:
         if orientation == 'H':
             if left(coord) in self.walls or right(coord) in self.walls or self.will_block_path(coord, orientation):
                 return False
-        if orientation == 'W':
+        if orientation == 'V':
             if top(coord) in self.walls or bottom(coord) in self.walls or self.will_block_path(coord, orientation):
                 return False
         return True
@@ -144,13 +144,13 @@ class Board:
         p1_is_clear = []
         p2_is_clear = []
         for finish in p1_finish:
-            found = pathfind(self.get_path_grid(supposed_walls), self.players[0].pos, finish)
+            found = pathfind(self.get_path_grid(supposed_walls), self.players[0].pos[::-1], finish[::-1])
             if found is not False:
                 p1_is_clear.append(found[0])
             else:
                 p1_is_clear.append(found)
         for finish in p2_finish:
-            found = pathfind(self.get_path_grid(supposed_walls), self.players[1].pos, finish)
+            found = pathfind(self.get_path_grid(supposed_walls), self.players[1].pos[::-1], finish[::-1])
             if found is not False:
                 p2_is_clear.append(found[0])
             else:
