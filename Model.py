@@ -50,7 +50,7 @@ class Board:
         self.players = []
 
     def can_place_wall_here(self, coord, orientation):
-        if not coord[0] % 2 == 1 and not coord[1] % 2 == 1:
+        if not coord[0] % 2 == 1 or not coord[1] % 2 == 1:
             return False
         if coord in self.walls:
             return False
