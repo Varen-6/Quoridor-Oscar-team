@@ -18,7 +18,6 @@ class View:
         self.p1_color = 'blue'
         self.p2_color = 'red'
 
-
     def get_empty_board(self):
         for j in range(17):
             if j % 2 == 0:
@@ -80,20 +79,6 @@ class View:
         p2_text.draw(self.win)
         self.for_undraw.extend([p1_text, p2_text])
 
-
-    def draw_whose_turn(self, current_player):
-        if current_player.id == 1 and not current_player.is_winner():
-            current_turn_text = g.Text(self.curent_turn_text_pos, 'Turn of P1')
-            current_turn_text.setFill(self.p1_color)
-        elif current_player.id == 2 and not current_player.is_winner():
-            current_turn_text = g.Text(self.curent_turn_text_pos, 'Turn of P2')
-            current_turn_text.setFill(self.p2_color)
-        else:
-            current_turn_text = g.Text(self.curent_turn_text_pos, 'P{} has won!!'.format(current_player.id))
-            current_turn_text.setFill(self.win_color)
-        current_turn_text.draw(self.win)
-        self.for_undraw.append(current_turn_text)
-
     def draw(self, board, current_player):
         try:
             self.undraw()
@@ -104,7 +89,6 @@ class View:
         self.get_players(board)
         self.draw_grid_numbers()
         self.draw_players_walls(board)
-        self.draw_whose_turn(current_player)
         for row in self.board_view:
             for elem in row:
                 elem.draw(self.win)
