@@ -83,3 +83,6 @@ def get_wall_orientation():
             return action
         else:
             print('Unknown orientation, type another')
+def get_winner(player_id):
+    cls()
+    print('Congrats! Player {} has won! Returning to menu in 10 seconds.'.format(player_id))            
