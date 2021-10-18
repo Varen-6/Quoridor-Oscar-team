@@ -1,4 +1,4 @@
-from Pathfinder import pathfind
+from Pathfinder import pathfinding, Graph
 
 
 class Player:
@@ -140,22 +140,12 @@ class Board:
         else:
             return False
 
-    def players_have_paths(self, supposed_walls, p1_finish, p2_finish):
-        p1_is_clear = []
-        p2_is_clear = []
-        for finish in p1_finish:
-            found = pathfind(self.get_path_grid(supposed_walls), self.players[0].pos[::-1], finish[::-1])
-            if found is not False:
-                p1_is_clear.append(found[0])
-            else:
-                p1_is_clear.append(found)
-        for finish in p2_finish:
-            found = pathfind(self.get_path_grid(supposed_walls), self.players[1].pos[::-1], finish[::-1])
-            if found is not False:
-                p2_is_clear.append(found[0])
-            else:
-                p2_is_clear.append(found)
-        return p1_is_clear, p2_is_clear
+    def players_have_paths(self, supposed_walls, p1_finishes, p2_finishes):
+        p1_pos = self.players[0].pos
+        p2_pos = self.players[1].pos
+        graph = Graph()
+        graph.get_edges(self.get_path_grid(supposed_walls))
+        return pathfinding(graph, p1_pos, p1_finishes), pathfinding(graph, p2_pos, p2_finishes)
 
     def is_at_left_edge(self, coord):
         return coord[0] == 0
