@@ -1,99 +1,79 @@
-# Python program to find the shortest
-# path between a given source cell
-# to a destination cell.
-
-from collections import deque
-
-ROW = 17
-COL = 17
+from collections import defaultdict
 
 
-# To store matrix cell coordinates
-class Point:
-    def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
+class Graph:
+    def __init__(self):
+        self.edges = defaultdict(list)
+        self.weights = {}
+
+    def get_edges(self, mat):
+        for y in range(len(mat)):
+            for x in range(len(mat[y])):
+                if x % 2 == 0 and y % 2 == 0:
+                    if 1 <= (x - 1) <= 15:
+                        if mat[y][x - 1] == 1:
+                            self.add_edge((x, y), (x - 2, y))
+                    if 1 <= (x + 1) <= 15:
+                        if mat[y][x + 1] == 1:
+                            self.add_edge((x, y), (x + 2, y))
+                    if 1 <= (y - 1) <= 15:
+                        if mat[y - 1][x] == 1:
+                            self.add_edge((x, y), (x, y - 2))
+                    if 1 <= (y + 1) <= 15:
+                        if mat[y + 1][x] == 1:
+                            self.add_edge((x, y), (x, y + 2))
+
+    def add_edge(self, from_node, to_node):
+        self.edges[from_node].append(to_node)
+        self.edges[to_node].append(from_node)
+        self.weights[(from_node, to_node)] = 1
+        self.weights[(to_node, from_node)] = 1
 
 
-# A data structure for queue used in BFS
-class queueNode:
-    def __init__(self, pt: Point, dist: int):
-        self.pt = pt  # The coordinates of the cell
-        self.dist = dist  # Cell's distance from the source
+def dijsktra(graph, initial, end):
+    # shortest paths is a dict of nodes
+    # whose value is a tuple of (previous node, weight)
+    shortest_paths = {initial: (None, 0)}
+    current_node = initial
+    visited = set()
+
+    while current_node != end:
+        visited.add(current_node)
+        destinations = graph.edges[current_node]
+        weight_to_current_node = shortest_paths[current_node][1]
+
+        for next_node in destinations:
+            weight = graph.weights[(current_node, next_node)] + weight_to_current_node
+            if next_node not in shortest_paths:
+                shortest_paths[next_node] = (current_node, weight)
+            else:
+                current_shortest_weight = shortest_paths[next_node][1]
+                if current_shortest_weight > weight:
+                    shortest_paths[next_node] = (current_node, weight)
+
+        next_destinations = {node: shortest_paths[node] for node in shortest_paths if node not in visited}
+        if not next_destinations:
+            return False
+        # next node is the destination with the lowest weight
+        current_node = min(next_destinations, key=lambda k: next_destinations[k][1])
+
+    # Work back through destinations in shortest path
+    path = []
+    while current_node is not None:
+        path.append(current_node)
+        next_node = shortest_paths[current_node][0]
+        current_node = next_node
+    # Reverse path
+    path = path[::-1]
+    return path
 
 
-# Check whether given cell(row,col)
-# is a valid cell or not
-def isValid(row: int, col: int):
-    return (row >= 0) and (row < ROW) and (col >= 0) and (col < COL)
-
-
-# These arrays are used to get row and column
-# numbers of 4 neighbours of a given cell
-rowNum = [-1, 0, 0, 1]
-colNum = [0, -1, 1, 0]
-
-
-# Function to find the shortest path between
-# a given source cell to a destination cell.
-def BFS(mat, src: Point, dest: Point):
-    # check source and destination cell
-    # of the matrix have value 1
-    if mat[src.x][src.y] != 1 or mat[dest.x][dest.y] != 1:
-        return -1
-
-    visited = [[False for i in range(COL)]
-               for j in range(ROW)]
-
-    # Mark the source cell as visited
-    visited[src.x][src.y] = True
-
-    # Create a queue for BFS
-    q = deque()
-
-    # Distance of source cell is 0
-    s = queueNode(src, 0)
-    q.append(s)  # Enqueue source cell
-
-    # Do a BFS starting from source cell
-    while q:
-
-        curr = q.popleft()  # Dequeue the front cell
-
-        # If we have reached the destination cell,
-        # we are done
-        pt = curr.pt
-        if pt.x == dest.x and pt.y == dest.y:
-            return curr.dist
-
-        # Otherwise enqueue its adjacent cells
-        for i in range(4):
-            row = pt.x + rowNum[i]
-            col = pt.y + colNum[i]
-
-            # if adjacent cell is valid, has path
-            # and not visited yet, enqueue it.
-            if (isValid(row, col) and
-                    mat[row][col] == 1 and
-                    not visited[row][col]):
-                visited[row][col] = True
-                Adjcell = queueNode(Point(row, col),
-                                    curr.dist + 1)
-                q.append(Adjcell)
-
-    # Return -1 if destination cannot be reached
-    return -1
-
-
-# Driver code
-def pathfind(mat, start, end):
-    source = Point(start[0], start[1])
-    dest = Point(end[0], end[1])
-    dist = BFS(mat, source, dest)
-
-    if dist != -1:
-        return True, dist
-    else:
-        return False
-
-# This code is contributed by stutipathak31jan
+# Checking if path exist for multiple destinations
+def pathfinding(graph, start, ends_list):
+    exist = []
+    for end in ends_list:
+        if not dijsktra(graph, start, end):
+            exist.append(False)
+        else:
+            exist.append(True)
+    return exist
