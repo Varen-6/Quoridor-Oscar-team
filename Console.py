@@ -55,18 +55,12 @@ def get_move_action(board, player):
 
 def get_wall_action(board, player):
     orient = get_wall_orientation().capitalize()
-    wall_actions = []
-    wall_actions_raw = board.get_valid_wall_places(orient)
-    for places in wall_actions_raw:
-        if places != []:
-            wall_actions.extend(places)
     correct_input = False
     while not correct_input:
         try:
             x = int(input('Type x coordinate where to place the wall: '))
             y = int(input('Type y coordinate where to place the wall: '))
-            if (x, y) in wall_actions:
-                board.place_wall(player, x, y, orient)
+            if board.place_wall(player, x, y, orient) is not False:
                 correct_input = True
             else:
                 print('Can`t place wall there!')
