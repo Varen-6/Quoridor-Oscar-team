@@ -224,27 +224,27 @@ class Board:
             p2_exist = False
         return p1_exist, p2_exist
 
-    # def fastest_path_to_finish(self, player):
-    #     p_pos = (player.pos[0], player.pos[1] + 1)
-    #     weights = self.get_path_grid_walls(self.wall_bricks, player)
-    #     p_search_end = player.search_goal
-    #     shortest_path = pyastar2d.astar_path(weights, p_pos[::-1], p_search_end[::-1])
-    #     if shortest_path is not None:
-    #         return array([coord for coord in shortest_path if coord[0] % 2 == 0 and coord[1] % 2 == 0])
-    #     else:
-    #         return array([])
-
     def fastest_path_to_finish(self, player):
-        weights = self.get_path_grid(self.wall_bricks)
-        shortest_path = []
-        for i in range(9):
-            path = pyastar2d.astar_path(weights, player.pos[::-1], player.finishes[i][::-1])
-            if path is not None:
-                if shortest_path == []:
-                    shortest_path = path
-                elif shortest_path != [] and len(path) <= len(shortest_path):
-                    shortest_path = path
-        return array([coord for coord in shortest_path if coord[0] % 2 == 0 and coord[1] % 2 == 0])
+        p_pos = (player.pos[0], player.pos[1] + 1)
+        weights = self.get_path_grid_walls(self.wall_bricks, player)
+        p_search_end = player.search_goal
+        shortest_path = pyastar2d.astar_path(weights, p_pos[::-1], p_search_end[::-1])
+        if shortest_path is not None:
+            return array([coord for coord in shortest_path if coord[0] % 2 == 0 and coord[1] % 2 == 0])
+        else:
+            return array([])
+
+    # def fastest_path_to_finish(self, player):
+    #     weights = self.get_path_grid(self.wall_bricks)
+    #     shortest_path = []
+    #     for i in range(9):
+    #         path = pyastar2d.astar_path(weights, player.pos[::-1], player.finishes[i][::-1])
+    #         if path is not None:
+    #             if shortest_path == []:
+    #                 shortest_path = path
+    #             elif shortest_path != [] and len(path) <= len(shortest_path):
+    #                 shortest_path = path
+    #     return array([coord for coord in shortest_path if coord[0] % 2 == 0 and coord[1] % 2 == 0])
 
     def is_at_left_edge(self, coord):
         return coord[0] == 0
