@@ -12,12 +12,12 @@ class Game:
         ai = AI_Agent(first_player)
         while True:
             if first_player == 1:
-                ai.think_and_move(self.board, 3)
+                ai.think_and_move(self.board, 2)
                 ai.act(self.board, ai.chosen_action)
                 print(self.console.translate_output(ai.chosen_action[0], ai.chosen_action[1]))
                 self.console.get_player_action(self.board, input())
             else:
                 self.console.get_player_action(self.board, input())
-                ai.think_and_move(self.board, 3)
+                ai.think_and_move(self.board, 2)
                 ai.act(self.board, ai.chosen_action)
                 print(self.console.translate_output(ai.chosen_action[0], ai.chosen_action[1]))

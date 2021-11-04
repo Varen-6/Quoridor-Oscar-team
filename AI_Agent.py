@@ -38,7 +38,7 @@ class AI_Agent:
             return beta
 
     def minimax_move(self, state, depth, alpha=-inf, beta=inf):  # Minimax outer that memorizes actions bot can choose
-        for action in self.get_legal_actions(state, state.current_player.id-1):
+        for action in self.get_legal_actions(state, state.players[self.max_id].id-1):
             child = self.picklecopy(state)
             self.act(child, action)
             val = self.minimax(child, depth-1, alpha, beta, False)
@@ -52,11 +52,7 @@ class AI_Agent:
         if state.players[self.min_id].walls_number == 10:
             path = state.fastest_path_to_finish(state.current_player)
             moveto = (path[1][1], path[1][0])
-            if moveto not in state.get_valid_moves(state.current_player.pos)[0]:
-                if self.max_id == 1:
-                    self.chosen_action = ("jump", state.get_valid_moves()[1][0])
-                    return
-            else:
+            if moveto in state.get_valid_moves(state.current_player.pos)[0]:
                 self.chosen_action = ("move", moveto)
                 return
         self.action_list = []

@@ -2,8 +2,10 @@
 /__pycache__
 /.idea
 /Game log.txt
-/test.py
 /Quoridor.AiTester.exe
 /Quoridor.cmd
 /Quoridor.build
 /Quoridor.exe
+/build
+/dist
+/Quoridor.dist
