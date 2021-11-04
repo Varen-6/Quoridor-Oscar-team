@@ -142,6 +142,18 @@ class Board:
     def get_valid_moves(self, coord):
         valid_moves = []
         valid_jumps = []
+        if not self.is_at_top_edge(coord) and not self.has_wall_top(coord):
+            top_coord = top2(coord)
+            if not self.has_player(top_coord):
+                valid_moves.append(top_coord)
+            else:
+                if not self.is_at_top_edge(top_coord) and not self.has_wall_top(top_coord) and not self.has_player(top2(top_coord)):
+                    valid_jumps.append(top2(top_coord))
+                else:
+                    if not self.is_at_left_edge(top_coord) and not self.has_wall_left(top_coord) and not self.has_player(left2(top_coord)):
+                        valid_jumps.append(left2(top_coord))
+                    if not self.is_at_right_edge(top_coord) and not self.has_wall_right(top_coord) and not self.has_player(right2(top_coord)):
+                        valid_jumps.append(right2(top_coord))
         if not self.is_at_left_edge(coord) and not self.has_wall_left(coord):
             left_coord = left2(coord)
             if not self.has_player(left_coord):
@@ -166,18 +178,6 @@ class Board:
                         valid_jumps.append(top2(right_coord))
                     if not self.is_at_bottom_edge(right_coord) and not self.has_wall_bottom(right_coord) and not self.has_player(bottom2(right_coord)):
                         valid_jumps.append(bottom2(right_coord))
-        if not self.is_at_top_edge(coord) and not self.has_wall_top(coord):
-            top_coord = top2(coord)
-            if not self.has_player(top_coord):
-                valid_moves.append(top_coord)
-            else:
-                if not self.is_at_top_edge(top_coord) and not self.has_wall_top(top_coord) and not self.has_player(top2(top_coord)):
-                    valid_jumps.append(top2(top_coord))
-                else:
-                    if not self.is_at_left_edge(top_coord) and not self.has_wall_left(top_coord) and not self.has_player(left2(top_coord)):
-                        valid_jumps.append(left2(top_coord))
-                    if not self.is_at_right_edge(top_coord) and not self.has_wall_right(top_coord) and not self.has_player(right2(top_coord)):
-                        valid_jumps.append(right2(top_coord))
         if not self.is_at_bottom_edge(coord) and not self.has_wall_bottom(coord):
             bottom_coord = bottom2(coord)
             if not self.has_player(bottom_coord):

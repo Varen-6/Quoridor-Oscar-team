@@ -16,8 +16,10 @@ class AI_Agent:
         return len(state.fastest_path_to_finish(state.players[self.min_id])) - len(state.fastest_path_to_finish(state.players[self.max_id]))
 
     def minimax(self, state, depth, alpha=-inf, beta=inf, max_player=True):  # Minimax main function
-        if depth == 0 or state.current_player.is_winner():
+        if depth == 0:
             return self.score(state)
+        if state.players[self.max_id].is_winner():
+            return self.score(state) * 1.25
         if max_player:
             for action in self.get_legal_actions(state, state.current_player.id-1):
                 child = self.picklecopy(state)
@@ -50,11 +52,13 @@ class AI_Agent:
         if state.players[self.min_id].walls_number == 10:
             path = state.fastest_path_to_finish(state.current_player)
             moveto = (path[1][1], path[1][0])
-            if moveto in state.get_valid_moves(state.current_player.pos)[0]:
+            if moveto not in state.get_valid_moves(state.current_player.pos)[0]:
+                if self.max_id == 1:
+                    self.chosen_action = ("jump", state.get_valid_moves()[1][0])
+                    return
+            else:
                 self.chosen_action = ("move", moveto)
                 return
-            else:
-                self.chosen_action = ("jump", state.get_valid_moves()[1][0])
         self.action_list = []
         self.minimax_move(state, depth)
         for action in self.action_list[::-1]:
