@@ -25,7 +25,7 @@ class AI_Agent:
                 child = self.picklecopy(state)
                 self.act(child, action)
                 alpha = max(array([alpha, self.minimax(child, depth-1, alpha, beta, False)]))
-                if alpha >= beta:
+                if alpha >= beta or (time() - self.t) > 2:
                     break
             return alpha
         else:
@@ -33,11 +33,12 @@ class AI_Agent:
                 child = self.picklecopy(state)
                 self.act(child, action)
                 beta = min(array([beta, self.minimax(child, depth-1, alpha, beta, True)]))
-                if alpha >= beta:
+                if alpha >= beta or (time() - self.t) > 2:
                     break
             return beta
 
     def minimax_move(self, state, depth, alpha=-inf, beta=inf):  # Minimax outer that memorizes actions bot can choose
+        self.t = time()
         for action in self.get_legal_actions(state, state.players[self.max_id].id-1):
             child = self.picklecopy(state)
             self.act(child, action)
@@ -94,9 +95,9 @@ class AI_Agent:
         my_pos = state.players[player].pos
         enemy_spot_koefs = list(itertools.product([-3, -1, 1, 3], repeat=2))
         spots = list(map(lambda spot: (pos[0] + spot[0], pos[1] + spot[1]), enemy_spot_koefs))
-        # for wall in state.walls:
-        #     wpos = (wall[0], wall[1])
-        #     spots += [(wpos[0], wpos[1]-2), (wpos[0]+2, wpos[1]), (wpos[0], wpos[1]+2), (wpos[0]-2, wpos[1])]
+        nearwall_spot_coefs = [(-2, -2), (-2, 0), (-2, 2), (0, -2), (0, 2), (2, -2), (2, 0), (2, 2)]
+        for wall in state.walls:
+            spots += list(map(lambda spot: (wall[0] + spot[0], wall[1] + spot[1]), nearwall_spot_coefs))
         if state.players[player-1].walls_number > 0:
             my_spot_koefs = list(itertools.product([-1, 1], repeat=2))
             spots += list(map(lambda spot: (my_pos[0] + spot[0], my_pos[1] + spot[1]), my_spot_koefs))
