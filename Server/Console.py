@@ -90,12 +90,6 @@ class Console:
                 }
         }
 
-    def translate_output(self, action, data):
-        if action == 'move' or action == 'jump':
-            return action + ' ' + self.get_output(action, 'x', data[0]) + self.get_output(action, 'y', data[1])
-        elif action == 'wall':
-            return action + ' ' + self.get_output(action, 'x', data[0]) + self.get_output(action, 'y', data[1]) + self.get_output(action, 'orient', data[2])
-
     def translate_input(self, action, data):
         if action == 'move' or action == 'jump':
             return self.translator_map[action]['x'][data[0]], self.translator_map[action]['y'][data[1]]
@@ -103,17 +97,13 @@ class Console:
             return self.translator_map[action]['x'][data[0]], self.translator_map[action]['y'][data[1]], \
                    self.translator_map[action]['orient'][data[2]]
 
-    def get_output(self, action, x_y_orient, value):
-        return list(self.translator_map[action][x_y_orient].keys())[list(self.translator_map[action][x_y_orient].values()).index(value)]
-
     def cls(self):  # func to clear console output
         os.system('cls' if os.name=='nt' else 'clear')
 
-    def console_out(self, grid):
-        self.cls()
-        print('┌-----------------┐')
+    def con_return_out(self, grid):
+        out = '┌-----------------┐'
         for j in range(len(grid)):
-            printable = '|'
+            printable = '\n|'
             for i in range(len(grid[j])):
                 if grid[j][i] == 'W':
                     if j % 2 == 1:
@@ -129,39 +119,28 @@ class Console:
                 else:
                     printable += '▼'
             printable += '|'
-            print(printable)
-        print('└-----------------┘')
-
-    def get_first_player(self, board, line):
-        board.current_player = board.players[0]
-        if line == "black":
-            return 2
-        elif line == "white":
-            return 1
+            out += printable
+        out += '\n└-----------------┘'
+        return out
 
     def get_player_action(self, board, line):
         if line[:4] == "move":
             action = line[:4]
             data = line.split()
             if board.move_player(board.current_player, self.translate_input(action, data[1])) is False:
-                raise SystemError
+                return False
+            return True
 
         elif line[:4] == "jump":
             action = line[:4]
             data = line.split()
             if board.jump_player(board.current_player, self.translate_input(action, data[1])) is False:
-                raise SystemError
+                return False
+            return True
 
         elif line[:4] == "wall":
             action = line[:4]
             data = line.split()
             if board.place_wall(board.current_player, self.translate_input(action, data[1])) is False:
-                raise SystemError
-
-
-def bot_make_move(board):
-    if board.current_player == board.players[0]:
-        pass
-
-
-
+                return False
+            return True
