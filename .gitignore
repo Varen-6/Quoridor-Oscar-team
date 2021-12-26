@@ -6,6 +6,5 @@
 /Quoridor.cmd
 /Quoridor.build
 /Quoridor.exe
-/build
-/dist
-/Quoridor.dist
+/Client/__pycache__
+/Server/__pycache__
