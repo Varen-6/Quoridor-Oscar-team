@@ -6,5 +6,13 @@
 /Quoridor.cmd
 /Quoridor.build
 /Quoridor.exe
+/Server/Server.spec
+/Client/__init__.py
 /Client/__pycache__
 /Server/__pycache__
+/Server/__init__.py
+/Client/Client.spec
+/Client/build
+/Server/build
+/Server/dist
+/Client/dist

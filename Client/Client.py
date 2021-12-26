@@ -2,6 +2,7 @@ import socket
 from pickle import loads, dumps
 import os
 import sys
+# from random import randint
 
 
 class Client:
@@ -9,6 +10,7 @@ class Client:
         self.buffer_size = 1024
         hostname = socket.gethostname()
         self.local_ip = socket.gethostbyname(hostname)
+        # self.local_ip = f"127.{randint(1, 255)}.{randint(1, 255)}.{randint(1, 255)}"  # For testing
         self.local_port = 5005
         self.client_state = "NotConnected"
         self.server_ip = "127.0.0.1"
@@ -22,6 +24,8 @@ class Client:
     def recieve(self):
         data, addr = self.sock.recvfrom(self.buffer_size)
         if addr[0] == self.server_ip:
+            # print(loads(data))
+            # print(addr)
             return loads(data), addr
         else:
             self.recieve()
@@ -86,5 +90,10 @@ class Client:
                     self.send(action, self.server_addr)
 
 
-client = Client()
-client.run()
+def main():
+    client = Client()
+    client.run()
+
+
+if __name__ == "__main__":
+    main()
